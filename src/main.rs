@@ -12,7 +12,14 @@ static OPTIONS: [Astro; 3] = [
 ];
 
 fn main() {
-    let weight: f32 = loop {
+    let weight: f32 = get_weight();
+    let selected_astro = select_astro();
+    let calculated_weight = calculate_weight(weight, selected_astro.gravity);
+    print_result(weight, selected_astro.name, calculated_weight);
+}
+
+fn get_weight() -> f32 {
+    loop {
         println!("Hello, enter your weight (kg):");
         let parsed_weight = read_input().trim().parse::<f32>();
 
@@ -20,9 +27,11 @@ fn main() {
             Ok(value) => break value,
             Err(_) => println!("Error: Please enter a valid number\n")
         }
-    };
+    }
+}
 
-    let selected_astro = loop {
+fn select_astro() -> &'static Astro {
+    loop {
         let menu_message = "Select where you want to know how much you weight:";
         let options_string: String = OPTIONS.iter()
             .enumerate()
@@ -43,10 +52,11 @@ fn main() {
             }
             Err(_) => println!("Error: Please enter a valid number\n")
         }
-    };
+    }
+}
 
-    let calculated_weight = calculate_weight(weight, selected_astro.gravity);
-    println!("Your weight in Earth is {} kg and your weight in {} is {} kg", weight, selected_astro.name, calculated_weight)
+fn print_result(weight: f32, astro_name: &str, result: f32) {
+    println!("Your weight in Earth is {} kg and your weight in {} is {} kg", weight, astro_name, result)
 }
 
 fn calculate_weight(weight: f32, gravity: f32) -> f32 {
